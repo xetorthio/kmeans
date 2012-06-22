@@ -1,7 +1,8 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cluster {
-    private List<Punto> puntos;
+    private List<Punto> puntos = new ArrayList<Punto>();
     private Punto centroide;
     private boolean termino = false;
 
@@ -25,4 +26,12 @@ public class Cluster {
 	this.termino = termino;
     }
 
+    public void limpiarPuntos() {
+	puntos.clear();
+    }
+
+    @Override
+    public String toString() {
+	return centroide.toString();
+    }
 }

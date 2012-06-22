@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
 
 public class Start {
     public static void main(String[] args) throws IOException {
 	CSVReader reader = new CSVReader(new FileReader("data.csv"));
-	CSVWriter writer = new CSVWriter(new FileWriter("out.csv"));
+	FileWriter writer = new FileWriter("out.csv");
 
 	List<String[]> myEntries = reader.readAll();
 	List<Punto> puntos = new ArrayList<Punto>();
@@ -23,17 +22,19 @@ public class Start {
 	KMeans kmeans = new KMeans();
 	for (int k = 1; k <= 5; k++) {
 	    KMeansResultado resultado = kmeans.calcular(puntos, k);
-	    writer.writeNext(new String[] { "------- Con k=" + k + " -------" });
+	    writer.write("------- Con k=" + k + " ofv=" + resultado.getOfv()
+		    + "-------\n");
+	    int i = 0;
 	    for (Cluster cluster : resultado.getClusters()) {
+		i++;
+		writer.write("-- Cluster " + i + " --\n");
 		for (Punto punto : cluster.getPuntos()) {
-		    writer.writeNext(new String[] {
-			    String.valueOf(punto.getX()),
-			    String.valueOf(punto.getY()) });
+		    writer.write(punto.getX() + ", " + punto.getY() + "\n");
 		}
-		writer.writeNext(new String[] { "" });
-		writer.writeNext(new String[] {
-			String.valueOf(cluster.getCentroide().getX()),
-			String.valueOf(cluster.getCentroide().getY()) });
+		writer.write("\n");
+		writer.write(cluster.getCentroide().getX() + ", "
+			+ cluster.getCentroide().getY());
+		writer.write("\n\n");
 	    }
 	}
 	writer.close();
