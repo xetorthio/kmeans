@@ -29,11 +29,10 @@ public class Start {
 		i++;
 		writer.write("-- Cluster " + i + " --\n");
 		for (Punto punto : cluster.getPuntos()) {
-		    writer.write(punto.getX() + ", " + punto.getY() + "\n");
+		    writer.write(punto.toString() + "\n");
 		}
 		writer.write("\n");
-		writer.write(cluster.getCentroide().getX() + ", "
-			+ cluster.getCentroide().getY());
+		writer.write(cluster.getCentroide().toString());
 		writer.write("\n\n");
 	    }
 	}

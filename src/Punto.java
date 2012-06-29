@@ -1,55 +1,57 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Punto {
-    private float x;
-    private float y;
+    private Float[] data;
 
     public Punto(String[] strings) {
 	super();
-	this.x = Float.parseFloat(strings[0]);
-	this.y = Float.parseFloat(strings[1]);
+	List<Float> puntos = new ArrayList<Float>();
+	for (String string : strings) {
+	    puntos.add(Float.parseFloat(string));
+	}
+	this.data = puntos.toArray(new Float[strings.length]);
     }
 
-    public Punto(Float x, Float y) {
-	this.x = x;
-	this.y = y;
+    public Punto(Float[] data) {
+	this.data = data;
     }
 
-    public float getX() {
-	return x;
+    public float get(int dimension) {
+	return data[dimension];
     }
 
-    public float getY() {
-	return y;
+    public int getGrado() {
+	return data.length;
     }
 
     @Override
     public String toString() {
-	return "(" + x + ", " + y + ")";
+	StringBuilder sb = new StringBuilder();
+	sb.append(data[0]);
+	for (int i = 1; i < data.length; i++) {
+	    sb.append(", ");
+	    sb.append(data[i]);
+	}
+	return sb.toString();
     }
 
     public Double distanciaEuclideana(Punto destino) {
-	return Math.sqrt(Math.pow(destino.x - this.x, 2)
-		+ Math.pow(destino.y - this.y, 2));
-    }
-
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	long temp;
-	temp = Double.doubleToLongBits(x);
-	result = prime * result + (int) (temp ^ (temp >>> 32));
-	temp = Double.doubleToLongBits(y);
-	result = prime * result + (int) (temp ^ (temp >>> 32));
-	return result;
+	Double d = 0d;
+	for (int i = 0; i < data.length; i++) {
+	    d += Math.pow(data[i] - destino.get(i), 2);
+	}
+	return Math.sqrt(d);
     }
 
     @Override
     public boolean equals(Object obj) {
 	Punto other = (Punto) obj;
-	if (this.x == other.x && this.y == other.y) {
-	    return true;
-	} else {
-	    return false;
+	for (int i = 0; i < data.length; i++) {
+	    if (data[i] != other.get(i)) {
+		return false;
+	    }
 	}
+	return true;
     }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,15 +25,15 @@ public class KMeans {
 		continue;
 	    }
 
-	    Float nuevoX = 0f;
-	    Float nuevoY = 0f;
+	    Float[] d = new Float[c.getPuntos().get(0).getGrado()];
+	    Arrays.fill(d, 0f);
 	    for (Punto p : c.getPuntos()) {
-		nuevoX += p.getX();
-		nuevoY += p.getY();
+		for (int i = 0; i < p.getGrado(); i++) {
+		    d[i] += (p.get(i) / c.getPuntos().size());
+		}
 	    }
 
-	    Punto nuevoCentroide = new Punto(nuevoX / c.getPuntos().size(),
-		    nuevoY / c.getPuntos().size());
+	    Punto nuevoCentroide = new Punto(d);
 
 	    if (nuevoCentroide.equals(c.getCentroide())) {
 		c.setTermino(true);
@@ -88,26 +89,34 @@ public class KMeans {
     private List<Cluster> elegirCentroides(List<Punto> puntos, Integer k) {
 	List<Cluster> centroides = new ArrayList<Cluster>();
 
-	// me fijo máximo y mínimo Y
-	// me fijo máximo y mínimo X
+	List<Float> maximos = new ArrayList<Float>();
+	List<Float> minimos = new ArrayList<Float>();
+	// me fijo máximo y mínimo de cada dimensión
 
-	Float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY, minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
+	for (int i = 0; i < puntos.get(0).getGrado(); i++) {
+	    Float min = Float.POSITIVE_INFINITY, max = Float.NEGATIVE_INFINITY;
 
-	for (Punto punto : puntos) {
-	    minX = minX > punto.getX() ? punto.getX() : minX;
-	    maxX = maxX < punto.getX() ? punto.getX() : maxX;
-	    minY = minY > punto.getY() ? punto.getY() : minY;
-	    maxY = maxY < punto.getY() ? punto.getY() : maxY;
+	    for (Punto punto : puntos) {
+		min = min > punto.get(i) ? punto.get(0) : min;
+		max = max < punto.get(i) ? punto.get(i) : max;
+	    }
+
+	    maximos.add(max);
+	    minimos.add(min);
 	}
 
 	Random random = new Random();
 
 	for (int i = 0; i < k; i++) {
-	    Float x = random.nextFloat() * (maxX - minX) + minX;
-	    Float y = random.nextFloat() * (maxY - minY) + minY;
+	    Float[] data = new Float[puntos.get(0).getGrado()];
+	    Arrays.fill(data, 0f);
+	    for (int d = 0; d < puntos.get(0).getGrado(); d++) {
+		data[d] = random.nextFloat()
+			* (maximos.get(d) - minimos.get(d)) + minimos.get(d);
+	    }
 
 	    Cluster c = new Cluster();
-	    Punto centroide = new Punto(x, y);
+	    Punto centroide = new Punto(data);
 	    c.setCentroide(centroide);
 	    centroides.add(c);
 	}
