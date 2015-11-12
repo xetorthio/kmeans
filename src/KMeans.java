@@ -97,7 +97,7 @@ public class KMeans {
 	    Float min = Float.POSITIVE_INFINITY, max = Float.NEGATIVE_INFINITY;
 
 	    for (Punto punto : puntos) {
-		min = min > punto.get(i) ? punto.get(0) : min;
+		min = min > punto.get(i) ? punto.get(i) : min;
 		max = max < punto.get(i) ? punto.get(i) : max;
 	    }
 
